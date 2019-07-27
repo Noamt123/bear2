@@ -13,16 +13,15 @@ jobs:
       # Specify service dependencies here if necessary
       # CircleCI maintains a library of pre-built images
       # documented at https://circleci.com/docs/2.0/circleci-images/
-      # - image: circleci/postgres:9.4
 
     working_directory: ~/repo
 
     steps:
-      - checkout
+      - checkout    
 
       - restore_cache:
           keys:
-            - v1-dependencies-{{ checksum "requirements.txt" }}                             - v1-dependencies-
+            - v1-dependencies-{{ checksum "requirements.txt" }}                             - v1-dependencies
 
       - run:
           name: install dependencies
@@ -31,20 +30,20 @@ jobs:
             . venv/bin/activate
             make install
             # Install hadolint
-            wget -0 /bin/hadolint https://github.com/hadolint/releases/download/v1.16.3/hadolint-Linux-x86_64 &&\
+            wget -O /bin/hadolint https://github.com/hadolint/hadolint/releases/download/v1.16.3/hadolint-Linux-x86_64 &&\
                 chmod +x /bin/hadolint
 
-       - save_cache:
-           paths:
-             - ./venv
-           keys: v1-dependencies-{{ checksum "requirements.txt" }}
+      - save_cache:
+          paths:
+           - ./venv
+          key: v1-dependencies-{{ checksum "requirements.txt" }}
 
-       # run lint!
-       - run:
-           name: run lint
-           command: |
-             . venv/bin/activate
-             make lint
+      # run lint!
+      - run:
+          name: run lint
+          command: |
+            . venv/bin/activate
+            make lint
 
 
       # Download and cache dependencies
